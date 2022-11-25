@@ -18,6 +18,8 @@
 // #include <signal.h>
 // #include <sys/select.h>
 
+int tcp_get_local_port(int socketfd);
+
 void tcp_socket_set_block(int socket, int on);
 
 int tcp_socket_connect(const char *host, int port, int timeout);

@@ -20,6 +20,15 @@
 
 #include "tcp_socket.h"
 
+int tcp_get_local_port(int socketfd) {
+    struct sockaddr_in sin;
+    socklen_t len = sizeof(sin);
+    if (getsockname(socketfd, (struct sockaddr *)&sin, &len) == -1)
+        return -1;
+
+    return ntohs(sin.sin_port);
+}
+
 void tcp_socket_set_block(int socket, int on) {
     int flags;
     flags = fcntl(socket, F_GETFL, 0);
@@ -124,6 +133,7 @@ int tcp_socket_listen(const char *address, int port) {
     int socketfd = socket(AF_INET, SOCK_STREAM, 0);
     int reuseon = 1;
     setsockopt(socketfd, SOL_SOCKET, SO_REUSEADDR, &reuseon, sizeof(reuseon));
+    setsockopt(socketfd, SOL_SOCKET, SO_REUSEPORT, &reuseon, sizeof(reuseon));
   
     //bind
     struct sockaddr_in serv_addr;
