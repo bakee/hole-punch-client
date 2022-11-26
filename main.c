@@ -238,10 +238,14 @@ void handle_as_server(int socketfd, user_options options) {
     printf("Listen complete!\r\n");
 
     // accept
-    Print("Waiting for a connection.");
+    int client_socketfd = -1;
     char remote_ip[20];
     int remote_port;
-    int client_socketfd = tcp_socket_accept(server_socketfd, remote_ip, &remote_port, 3600);
+    while (TRUE) {
+        Print("Waiting for a connection.");
+        client_socketfd = tcp_socket_accept(server_socketfd, remote_ip, &remote_port, 5);
+        make_server_call(socketfd, options);
+    }
     if(client_socketfd < 0) {
         printf("Error occured while accepting a connection. %d\r\n", client_socketfd);
         return;
