@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BD59BFB9293671DC0084AE42 /* client.c in Sources */ = {isa = PBXBuildFile; fileRef = BD59BFB3293671DC0084AE42 /* client.c */; };
+		BD59BFBA293671DC0084AE42 /* server.c in Sources */ = {isa = PBXBuildFile; fileRef = BD59BFB5293671DC0084AE42 /* server.c */; };
+		BD59BFBB293671DC0084AE42 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = BD59BFB6293671DC0084AE42 /* common.c */; };
 		BD75825E2931DBFB00C185C6 /* tcp_socket.c in Sources */ = {isa = PBXBuildFile; fileRef = BD75825B2931DBFB00C185C6 /* tcp_socket.c */; };
 		BD75825F2931DBFB00C185C6 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BD75825D2931DBFB00C185C6 /* main.c */; };
 /* End PBXBuildFile section */
@@ -24,6 +27,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		BD59BFB3293671DC0084AE42 /* client.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = client.c; path = ../../client.c; sourceTree = "<group>"; };
+		BD59BFB4293671DC0084AE42 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = ../../common.h; sourceTree = "<group>"; };
+		BD59BFB5293671DC0084AE42 /* server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = server.c; path = ../../server.c; sourceTree = "<group>"; };
+		BD59BFB6293671DC0084AE42 /* common.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = common.c; path = ../../common.c; sourceTree = "<group>"; };
+		BD59BFB7293671DC0084AE42 /* server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = server.h; path = ../../server.h; sourceTree = "<group>"; };
+		BD59BFB8293671DC0084AE42 /* client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = client.h; path = ../../client.h; sourceTree = "<group>"; };
+		BD59BFBC293671EF0084AE42 /* socket_data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = socket_data.h; path = ../../socket_data.h; sourceTree = "<group>"; };
 		BD7582502931DBC500C185C6 /* hole-punch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "hole-punch"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD75825A2931DBFB00C185C6 /* tcp_socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tcp_socket.h; path = ../../tcp_socket.h; sourceTree = "<group>"; };
 		BD75825B2931DBFB00C185C6 /* tcp_socket.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tcp_socket.c; path = ../../tcp_socket.c; sourceTree = "<group>"; };
@@ -64,6 +74,13 @@
 				BD75825D2931DBFB00C185C6 /* main.c */,
 				BD75825B2931DBFB00C185C6 /* tcp_socket.c */,
 				BD75825A2931DBFB00C185C6 /* tcp_socket.h */,
+				BD59BFB3293671DC0084AE42 /* client.c */,
+				BD59BFB8293671DC0084AE42 /* client.h */,
+				BD59BFB6293671DC0084AE42 /* common.c */,
+				BD59BFB4293671DC0084AE42 /* common.h */,
+				BD59BFB5293671DC0084AE42 /* server.c */,
+				BD59BFB7293671DC0084AE42 /* server.h */,
+				BD59BFBC293671EF0084AE42 /* socket_data.h */,
 				BD75825C2931DBFB00C185C6 /* user_options.h */,
 			);
 			path = "hole-punch";
@@ -126,8 +143,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD59BFBA293671DC0084AE42 /* server.c in Sources */,
+				BD59BFBB293671DC0084AE42 /* common.c in Sources */,
 				BD75825F2931DBFB00C185C6 /* main.c in Sources */,
 				BD75825E2931DBFB00C185C6 /* tcp_socket.c in Sources */,
+				BD59BFB9293671DC0084AE42 /* client.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

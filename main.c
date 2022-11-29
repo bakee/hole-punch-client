@@ -2,22 +2,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <ctype.h>
 
 #include "tcp_socket.h"
 #include "user_options.h"
-
-#define TRUE 1
-#define FALSE 0
-
-typedef struct {
-    char ip[16];
-    int port;
-} socket_data;
-
-void Print(const char* message) {
-    printf("%s\r\n", message);
-}
+#include "socket_data.h"
+#include "client.h"
+#include "server.h"
+#include "common.h"
 
 int get_server_socket() {
     // connect
@@ -116,18 +107,7 @@ socket_data parse_server_response(const char* server_response, int peer_id) {
     return data;
 }
 
-int make_server_call(int server_socket, user_options options) {
-    char http_body[200];
-    memset(http_body, 0, 200);
-    sprintf(http_body, "GET /?client-id=%d HTTP/1.1\r\nHost: punch.onlinewebshop.net \r\n\r\n", options.my_id);
-    int bytes_written = tcp_socket_send(server_socket, http_body, strlen(http_body));
-    if(bytes_written <= 0) {
-        printf("Could not send data over socket.");
-        return -1;
-    }
-    
-    return 0;
-}
+
 
 socket_data get_peer_socket_data(int server_socket, user_options options) {
     socket_data peer_socket_data = get_invalid_socket_data();
@@ -176,104 +156,14 @@ user_options parse_user_options(int argc, char* argv[]) {
 
     return options;
 }
+// A
+// A_PORT=50000
+// B_PORT=51000
+// To PHP Server:   S_IP=A_IP, S_PORT=A_PORT, D_IP=S_IP, D_PORT=S_PORT
+// To B (client):   S_IP=A_IP, S_PORT=A_PORT, D_IP=B_IP, D_PORT=B_PORT
+// From B (server): S_IP=B_IP, S_PORT=B_PORT, D_IP=A_IP, D_PORT=A_PORT
 
 
-
-void handle_as_client(int socketfd, user_options options, socket_data media_server_data) {
-    int media_server_socketfd;
-    // try connecting to the server
-    while(TRUE) {
-        printf("Connecting to media server: %s:%d\r\n", media_server_data.ip, media_server_data.port);
-        media_server_socketfd = tcp_socket_connect(/*media_server_data.ip*/"127.0.0.1", media_server_data.port, 10);
-        if(media_server_socketfd > 0) {
-            break;
-        }
-    }
-
-    // Give user prompt to type message
-    char user_input[100];
-    char server_response[100];
-    while (TRUE)
-    {
-        memset(user_input, 0, 100);
-        printf("Write your message: ");
-        scanf("%s", user_input);
-        int user_input_length = strlen(user_input);
-        tcp_socket_send(media_server_socketfd, user_input, user_input_length);
-
-        // print server response
-        printf("Server: ");
-        memset(server_response, 0, 100);
-        int response_length = tcp_socket_pull(media_server_socketfd, server_response, 100, 10);
-        printf("%s", server_response);
-    }
-}
-
-void to_upper_case(char* str, const int str_length) {
-    int i;
-    for(i = 0; i < str_length; i++) {
-        str[i] = (char) toupper(str[i]);
-    }
-}
-
-void handle_as_server(int socketfd, user_options options) {
-    int response = make_server_call(socketfd, options);
-    if(response < 0) {
-        Print("Server request failed!");
-        return;
-    }
-    
-    Print("Server request successful!");
-    
-    int local_port = tcp_get_local_port(socketfd);
-    // bind/listen
-    int server_socketfd = tcp_socket_listen("0.0.0.0", local_port);
-    printf("Listening on port: %d\r\n", local_port);
-
-    if(server_socketfd < 0) {
-        printf("Error in listening...\r\n");
-        return;
-    }
-
-    printf("Listen complete!\r\n");
-
-    // accept
-    int client_socketfd = -1;
-    char remote_ip[20];
-    int remote_port;
-    while (TRUE) {
-        Print("Waiting for a connection.");
-        client_socketfd = tcp_socket_accept(server_socketfd, remote_ip, &remote_port, 5);
-        make_server_call(socketfd, options);
-    }
-    if(client_socketfd < 0) {
-        printf("Error occured while accepting a connection. %d\r\n", client_socketfd);
-        return;
-    }
-
-    printf("Accepted a connection %d\r\n", client_socketfd);
-    // reply in a loop, break in special case
-    const int read_buffer_length = 100;
-    char read_buffer[read_buffer_length];
-    char write_buffer[read_buffer_length];
-
-    while(TRUE) {
-        Print("Pulling from client socket");
-        int read_length = tcp_socket_pull(client_socketfd, read_buffer, 5, 2);
-        if(read_length <= 0) {
-            Print("No data read");
-            continue;
-        }
-
-        printf("Got data from client: %s\r\n", read_buffer);
-        memcpy(write_buffer, read_buffer, read_length);
-        to_upper_case(write_buffer, read_length);
-        
-        Print("Sending response to client");
-        printf("Response: %s\r\n", write_buffer);
-        tcp_socket_send(client_socketfd, write_buffer, read_length);
-    }
-}
 
 int main(int argc, char* argv[]) {
 
