@@ -9,7 +9,7 @@
 #include "server.h"
 
 void handle_as_server(int socketfd, user_options options) {
-    int response = make_server_call(socketfd, options);
+    int response = keep_alive(socketfd, options);
     if(response < 0) {
         Print("Server request failed!");
         return;
@@ -29,21 +29,23 @@ void handle_as_server(int socketfd, user_options options) {
 
     printf("Listen complete!\r\n");
 
-    // accept
-    int client_socketfd = -1;
-    char remote_ip[20];
-    int remote_port;
-    while (TRUE) {
-        Print("Waiting for a connection.");
-        client_socketfd = tcp_socket_accept(server_socketfd, remote_ip, &remote_port, 5);
-        make_server_call(socketfd, options);
-    }
-    if(client_socketfd < 0) {
-        printf("Error occured while accepting a connection. %d\r\n", client_socketfd);
-        return;
-    }
-
+    if(!options.is_udp) {
+        // accept
+        int client_socketfd = -1;
+        char remote_ip[20];
+        int remote_port;
+        while (TRUE) {
+            Print("Waiting for a connection.");
+            client_socketfd = tcp_socket_accept(server_socketfd, remote_ip, &remote_port, 5);
+            keep_alive(socketfd, options);
+        }
+        if(client_socketfd < 0) {
+            printf("Error occured while accepting a connection. %d\r\n", client_socketfd);
+            return;
+        }
     printf("Accepted a connection %d\r\n", client_socketfd);
+
+    }
     // reply in a loop, break in special case
     const int read_buffer_length = 100;
     char read_buffer[read_buffer_length];

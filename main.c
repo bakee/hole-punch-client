@@ -112,7 +112,7 @@ socket_data parse_server_response(const char* server_response, int peer_id) {
 socket_data get_peer_socket_data(int server_socket, user_options options) {
     socket_data peer_socket_data = get_invalid_socket_data();
     
-    int response = make_server_call(server_socket, options);
+    int response = keep_alive(server_socket, options);
     if(response < 0) {
         return peer_socket_data;
     }
@@ -136,7 +136,7 @@ user_options parse_user_options(int argc, char* argv[]) {
     options.my_id = -1;
     options.is_media_server = FALSE;
 
-    while (((c = getopt(argc, argv, "sp:m:")) != -1))
+    while (((c = getopt(argc, argv, "sup:m:")) != -1))
     {
         switch (c)
         {
@@ -148,6 +148,9 @@ user_options parse_user_options(int argc, char* argv[]) {
             break;
         case 's':
             options.is_media_server = TRUE;
+            break;
+        case 'u':
+            options.is_udp = TRUE;
             break;
         default:
             break;

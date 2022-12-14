@@ -23,7 +23,7 @@ void to_upper_case(char* str, const int str_length) {
 }
 
 
-int make_server_call(int server_socket, user_options options) {
+int keep_alive(int server_socket, user_options options) {
     char http_body[200];
     memset(http_body, 0, 200);
     sprintf(http_body, "GET /?client-id=%d HTTP/1.1\r\nHost: punch.onlinewebshop.net \r\n\r\n", options.my_id);

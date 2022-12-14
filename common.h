@@ -8,6 +8,6 @@
 
 void Print(const char* message);
 void to_upper_case(char* str, const int str_length);
-int make_server_call(int server_socket, user_options options);
+int keep_alive(int server_socket, user_options options);
 
 #endif
